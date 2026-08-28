@@ -764,19 +764,52 @@ a.boton2{background-size:auto;box-shadow:0 0 0 1px rgba(227,197,116,.42),
 .toma__pie b{font-weight:600;color:var(--oro-hondo)}
 .toma__pie i{display:block;font-style:normal;letter-spacing:.2em;
   color:rgba(42,33,24,.42);margin-bottom:5px}
+/* EL MARCO ES EL DE LA CAPTURA ORIGINAL, valor por valor: el mismo canto que
+   las cartas del friso, para que se lea como una pieza del mismo taller. La
+   extrusion va en DOS escalones duros y sin desenfoque (`0 5px 0` y
+   `0 9px 0`), que es la receta del S4; aplanarla a uno le quita el grosor. */
 .tira__marco{display:block;position:relative;border-radius:8px;overflow:hidden;
-  box-shadow:0 0 0 1px rgba(120,96,52,.4),0 0 0 5px rgba(250,244,230,.7),
-    0 0 0 6px rgba(120,96,52,.22),
-    0 4px 0 rgba(120,96,52,.18),0 22px 40px -14px rgba(40,28,12,.5)}
+  box-shadow:0 0 0 1px rgba(120,96,52,.5),0 0 0 4px rgba(255,255,255,.5),
+    0 0 0 5px rgba(120,96,52,.28),
+    0 5px 0 rgba(90,72,38,.28),0 9px 0 rgba(70,55,28,.18),
+    0 26px 44px -18px rgba(40,28,12,.6)}
 .tira__marco::before{content:'';position:absolute;inset:0;z-index:2;
   pointer-events:none;border-radius:8px;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.28),
-             inset 0 -18px 30px -20px rgba(0,0,0,.8)}
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.35),
+             inset 0 -1px 0 rgba(0,0,0,.35)}
 .tira img{display:block;width:100%;height:auto;aspect-ratio:16/9;
   background:#100b16}
 /* los puntos: en la placa de oro del juego, pequenos */
+
+/* LAS FLECHAS. Van sobre el canto de la lamina y centradas en LA IMAGEN, no
+   en el bloque entero -si se centran en `.tira` caen a la altura del pie-,
+   asi que cuelgan de `.tira__caja`, que envuelve solo la pista. */
+.tira__caja{position:relative}
+.tira__fle{position:absolute;top:50%;transform:translateY(-50%);z-index:4;
+  width:44px;height:44px;padding:0;border:0;cursor:pointer;border-radius:50%;
+  /* NO se ensenan hasta que el JS las coloca contra la altura MEDIDA de la
+     lamina: el pie va dentro de la pista, asi que un 50% del contenedor cae
+     31 px por debajo del centro de la imagen. Y una flecha que no responde
+     es peor que ninguna. */
+  display:none;align-items:center;justify-content:center;
+  color:var(--oro-luz);
+  background:linear-gradient(180deg,rgba(30,24,16,.86),rgba(14,11,7,.9));
+  box-shadow:0 0 0 1px rgba(227,197,116,.5),0 0 0 4px rgba(20,15,8,.4),
+    0 3px 0 rgba(8,6,4,.7),0 10px 18px -6px rgba(0,0,0,.7),
+    inset 0 1px 0 rgba(255,246,220,.22);
+  transition:transform .2s,box-shadow .25s,color .25s,opacity .25s}
+.tira__fle:hover{color:#fff;transform:translateY(-50%) scale(1.07);
+  box-shadow:0 0 0 1px rgba(255,214,120,.85),0 0 0 4px rgba(20,15,8,.4),
+    0 3px 0 rgba(8,6,4,.7),0 12px 22px -6px rgba(0,0,0,.75),
+    0 0 26px -6px rgba(255,203,102,.6),inset 0 1px 0 rgba(255,246,220,.3)}
+.tira__fle:disabled{opacity:.28;cursor:default;transform:translateY(-50%)}
+.tira__fle svg{width:17px;height:17px}
+.tira__fle--izq{left:clamp(6px,1.1vw,14px)}
+.tira__fle--der{right:clamp(6px,1.1vw,14px)}
+@media (max-width:520px){ .tira__fle{width:38px;height:38px} }
+/* orientativos, no el mando: pegados al pie y discretos */
 .tira__puntos{display:flex;justify-content:center;align-items:center;
-  gap:9px;margin-top:clamp(14px,1.6vw,20px)}
+  gap:8px;margin-top:9px}
 .tira__puntos button{width:9px;height:9px;padding:0;border:0;cursor:pointer;
   border-radius:50%;background:rgba(120,96,52,.3);
   box-shadow:inset 0 1px 0 rgba(0,0,0,.25);
@@ -1186,6 +1219,7 @@ a.boton2{background-size:auto;box-shadow:0 0 0 1px rgba(227,197,116,.42),
   </div>
 
   <div class="tira">
+    <div class="tira__caja">
     <div class="tira__pista" id="tiraPista" tabindex="0"
      aria-label="Escenas del juego">
       <article class="toma"><span class="tira__marco"><img src="img/02.webp"
@@ -1204,6 +1238,15 @@ a.boton2{background-size:auto;box-shadow:0 0 0 1px rgba(227,197,116,.42),
     width="1280" height="720" loading="lazy"
     alt="La sala del Dogobot: seis palabras en display verticales y el robot dentro de su c&#225;psula"></span>
     <p class="toma__pie"><i>Cap&#237;tulo VII</i>El Dogobot aplica las reglas a la perfecci&#243;n y <b>no entiende una palabra</b></p></article>
+    </div>
+      <button class="tira__fle tira__fle--izq" id="tiraIzq" type="button"
+        aria-label="Escena anterior"><svg viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" stroke-width="2.4" stroke-linecap="round"
+        stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
+      <button class="tira__fle tira__fle--der" id="tiraDer" type="button"
+        aria-label="Escena siguiente"><svg viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" stroke-width="2.4" stroke-linecap="round"
+        stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
     </div>
     <nav class="tira__puntos" id="tiraPuntos" aria-label="Ir a una escena"></nav>
       </div>
@@ -1494,31 +1537,45 @@ a.boton2{background-size:auto;box-shadow:0 0 0 1px rgba(227,197,116,.42),
     }, {passive: true});
   }
 })();
-  /* \u2500\u2500 LOS PUNTOS DEL CARRUSEL \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
-     El carrusel lo mueve el SCROLL NATIVO con anclaje; esto solo pinta los
-     puntos y los mantiene al dia. Si el JS no corre, la tira se sigue
-     arrastrando con el dedo y no se pierde nada. */
+  /* \u2500\u2500 EL CARRUSEL \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
+     Lo mueve el SCROLL NATIVO con anclaje; esto solo pone los mandos. Sin JS
+     la tira se sigue arrastrando con el dedo y no se pierde nada.
+
+     EL AVANCE AUTOMATICO SE PARA EN CUANTO ALGUIEN TOCA ALGO, y no vuelve:
+     un carrusel que sigue moviendose mientras lo miras es de las cosas mas
+     molestas que hay. Y ni arranca si el sistema pide menos movimiento. */
   (function () {
     var pista = document.getElementById('tiraPista');
     var caja = document.getElementById('tiraPuntos');
+    var izq = document.getElementById('tiraIzq');
+    var der = document.getElementById('tiraDer');
     if (!pista || !caja) return;
     var tomas = pista.querySelectorAll('.toma');
     if (tomas.length < 2) return;
-    var botones = [];
+
+    var cual = 0, botones = [], solo = null;
+
+    var ir = function (n, suave) {
+      n = Math.max(0, Math.min(tomas.length - 1, n));
+      pista.scrollTo({ left: tomas[n].offsetLeft - pista.offsetLeft,
+                       behavior: suave === false ? 'auto' : 'smooth' });
+    };
+    var quieto = function () {
+      if (solo) { clearInterval(solo); solo = null; }
+    };
+
     for (var i = 0; i < tomas.length; i++) {
       (function (n) {
         var b = document.createElement('button');
         b.type = 'button';
         b.setAttribute('aria-label', 'Escena ' + (n + 1) + ' de ' + tomas.length);
-        b.addEventListener('click', function () {
-          pista.scrollTo({ left: tomas[n].offsetLeft - pista.offsetLeft,
-                           behavior: 'smooth' });
-        });
+        b.addEventListener('click', function () { quieto(); ir(n); });
         caja.appendChild(b); botones.push(b);
       })(i);
     }
+
     var pinta = function () {
-      var c = pista.scrollLeft + pista.clientWidth / 2, cual = 0, mejor = 1e9;
+      var c = pista.scrollLeft + pista.clientWidth / 2, mejor = 1e9;
       for (var i = 0; i < tomas.length; i++) {
         var m = Math.abs((tomas[i].offsetLeft - pista.offsetLeft) +
                          tomas[i].offsetWidth / 2 - c);
@@ -1526,14 +1583,53 @@ a.boton2{background-size:auto;box-shadow:0 0 0 1px rgba(227,197,116,.42),
       }
       for (var j = 0; j < botones.length; j++)
         botones[j].setAttribute('aria-current', j === cual ? 'true' : 'false');
+      if (izq) izq.disabled = (cual === 0);
+      if (der) der.disabled = (cual === tomas.length - 1);
     };
+
+    /* las flechas, centradas en la LAMINA y no en el bloque */
+    var colocaFlechas = function () {
+      var m = pista.querySelector('.tira__marco');
+      if (!m) return;
+      var h = Math.round(m.getBoundingClientRect().height / 2);
+      [izq, der].forEach(function (b) {
+        if (!b) return;
+        b.style.display = 'flex';
+        b.style.top = h + 'px';
+      });
+    };
+    colocaFlechas();
+    addEventListener('resize', colocaFlechas);
+    var laPrimera = pista.querySelector('img');
+    if (laPrimera) laPrimera.addEventListener('load', colocaFlechas);
+
+    if (izq) izq.addEventListener('click', function () { quieto(); ir(cual - 1); });
+    if (der) der.addEventListener('click', function () { quieto(); ir(cual + 1); });
+    pista.addEventListener('keydown', function (e) {
+      if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+      e.preventDefault(); quieto();
+      ir(cual + (e.key === 'ArrowRight' ? 1 : -1));
+    });
+
     var t = null;
     pista.addEventListener('scroll', function () {
       if (t) return;
       t = setTimeout(function () { t = null; pinta(); }, 90);
     }, { passive: true });
+    ['pointerdown', 'wheel', 'touchstart'].forEach(function (ev) {
+      pista.addEventListener(ev, quieto, { passive: true });
+    });
     addEventListener('resize', pinta);
     pinta();
+
+    /* el avance solo: 6 s, y da la vuelta al llegar al final */
+    var lento = matchMedia('(prefers-reduced-motion: reduce)');
+    if (!lento.matches) {
+      solo = setInterval(function () {
+        if (document.hidden) return;
+        ir(cual + 1 >= tomas.length ? 0 : cual + 1);
+      }, 6000);
+    }
   })();
 
 </script>
