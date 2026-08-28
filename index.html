@@ -1419,9 +1419,17 @@ a.boton2{background-size:auto;box-shadow:0 0 0 1px rgba(227,197,116,.42),
         if (q && q.catch) q.catch(function () {});
       });
       consola.appendChild(ancho);
-      document.addEventListener('fullscreenchange', function () {
-        ancho.textContent = document.fullscreenElement ? 'Salir' : 'Pantalla completa';
-      });
+      /* Safari dispara `webkitfullscreenchange` y expone
+         `webkitFullscreenElement`: sin las dos variantes el boton entra en
+         pantalla completa pero se queda diciendo \u00abPantalla completa\u00bb. En un
+         iPhone no llega a crearse, que ahi la API no existe para un <div>. */
+      var rotula = function () {
+        ancho.textContent = (document.fullscreenElement ||
+                             document.webkitFullscreenElement)
+                            ? 'Salir' : 'Pantalla completa';
+      };
+      document.addEventListener('fullscreenchange', rotula);
+      document.addEventListener('webkitfullscreenchange', rotula);
     }
   }
   var botones = document.querySelectorAll('[data-jugar]');
