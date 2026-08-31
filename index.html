@@ -1048,14 +1048,19 @@ a.boton2{background-size:auto;box-shadow:0 0 0 1px rgba(227,197,116,.42),
   /* Y EL AIRE VERTICAL, que era el unico que no tenia: medido, 0/0
      contra 64/76, 64/72 y 52/56 de las otras tres. Son los valores de
      `.gesto`, su vecina, para no inventar un ritmo nuevo. */
-  padding-block:clamp(64px,7vw,104px) clamp(72px,8vw,116px)}
+  /* EL AIRE VA REDISTRIBUIDO, NO ANADIDO (lo pidio Oscar asi): el rotulo
+     tenia 90 px muertos por arriba y 0 de separacion con su titulo. Se le
+     quitan ~22 px al `padding-top` y se le dan al hueco de abajo del rotulo,
+     que es donde hacian falta. El alto de la cabecera no cambia. */
+  padding-block:clamp(46px,5.3vw,80px) clamp(72px,8vw,116px)}
+.friso__cab .rotulo{display:block;margin-bottom:clamp(14px,1.7vw,23px)}
 
 /* Y LA MEDIDA DEL PARRAFO NO ESTABA TOPADA: 85 caracteres por linea contra
    los 35 de la seccion del juego. La regla tipografica pide 45-70 - es la
    misma que ya obligo a no justificar la lupa en el movil (S16 del CLAUDE.md)
    - y una banda de texto de canto a canto es justo lo que se lee como
    "pegado". Mismo tope que `.centrado > p`. */
-.friso__cab > p{max-width:34em}
+.friso__cab > p{max-width:30em}
 /* EL PARRAFO SALIA A 0 px DE SU TITULO y con la mitad de su ancho -578 contra
    1137-, asi que colgaba a la izquierda bajo un h2 del doble de largo. Y
    ensancharlo NO vale: medido, de 38em en adelante cae en dos lineas de 80
@@ -1064,7 +1069,14 @@ a.boton2{background-size:auto;box-shadow:0 0 0 1px rgba(227,197,116,.42),
    del parrafo: asi el h2 cae en dos lineas y los dos bloques se leen como uno.
    Va en el <div> que lo envuelve y no en el h2, porque un `em` en el h2 se
    resuelve contra sus 46 px y daria 1.566. */
-.friso__cab > div{max-width:32em}
+/* EL TITULO, A LA MISMA MEDIDA QUE SU PARRAFO. Los dos resuelven `em`
+   contra 17 px, y el div iba a 32em contra los 34 del parrafo: 544 contra 578,
+   o sea que por la derecha no cuadraban - y con el parrafo justificado, que
+   deja canto recto, eso se ve. */
+.friso__cab > div{max-width:30em}
+/* y que las dos lineas del titulo se repartan solas si algun dia cambia el
+   texto o la medida */
+.friso__cab h2{text-wrap:balance}
 .friso__cab > p.justo{margin-top:clamp(13px,1.4vw,19px)}
 
 /* "HABRIA QUE DESTACARLO UN POCO": los otros dos h2 sobre fondo oscuro -el de
@@ -1245,8 +1257,15 @@ a.boton2{background-size:auto;box-shadow:0 0 0 1px rgba(227,197,116,.42),
    la palabra - ya paso dos veces (S3). Con `inline` no puede pasar. */
 .orient__pista{display:block;font-size:clamp(15px,1.2vw,17.5px);line-height:1.62;
   color:rgba(237,234,226,.7);letter-spacing:.012em}
-.orient__pista i{font-style:normal;color:var(--oro-claro);opacity:.85;
-  padding:0 .42em}
+/* LAS BARRAS, CON VOLUMEN. Es la receta del S4 en pequeno: el degradado que
+   da la luz por el centro y la deja morir en los cabos, la sombra del corte a
+   un lado y el halo. Un filete de un color plano seria una raya. */
+.orient__pista i{display:inline-block;width:3px;height:1.06em;
+  margin:0 .74em;vertical-align:-.17em;border-radius:1px;
+  background:linear-gradient(180deg,transparent,rgba(227,197,116,.22) 14%,
+    rgba(244,220,158,.95) 50%,rgba(227,197,116,.22) 86%,transparent);
+  box-shadow:inset -1px 0 0 rgba(0,0,0,.5),1px 0 0 rgba(0,0,0,.34),
+             0 0 9px rgba(255,203,102,.4)}
 /* EL CHEVRON VA ABAJO Y CENTRADO, no a la derecha: puesto al costado obligaba
    a reservarle ancho y dejaba la placa ASIMETRICA - medido, el filete
    izquierdo caia a 23 px del borde y el derecho a 60, o sea 37 de desvio, y
@@ -1661,7 +1680,7 @@ a.boton2{background-size:auto;box-shadow:0 0 0 1px rgba(227,197,116,.42),
         <span class="orient__fle orient__fle--der" aria-hidden="true"></span>
         <span class="orient__rot">Para quien lo lleve al aula o precise un plan de aprendizaje</span>
         <span class="orient__tit">Orientaciones pedag&#243;gicas</span>
-        <span class="orient__pista"><span>Qu&#233; mide cada cap&#237;tulo</span><i aria-hidden="true">&#183;</i><span>Los tres modos</span><i aria-hidden="true">&#183;</i><span>El parte de fallos</span></span>
+        <span class="orient__pista"><span>Qu&#233; mide cada cap&#237;tulo</span><i aria-hidden="true"></i><span>Los tres modos</span><i aria-hidden="true"></i><span>El parte de fallos</span></span>
         <span class="orient__accion" aria-hidden="true"><span class="orient__verbo orient__verbo--abrir">Desplegar</span><span class="orient__verbo orient__verbo--cerrar">Plegar</span><span class="orient__abre"><svg viewBox="0 0 15 9"><path d="M1.4 1.4L7.5 7.5l6.1-6.1"/></svg></span></span>
       </summary>
 
