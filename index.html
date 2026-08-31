@@ -1060,7 +1060,28 @@ a.boton2{background-size:auto;box-shadow:0 0 0 1px rgba(227,197,116,.42),
    misma que ya obligo a no justificar la lupa en el movil (S16 del CLAUDE.md)
    - y una banda de texto de canto a canto es justo lo que se lee como
    "pegado". Mismo tope que `.centrado > p`. */
+/* LA MEDIDA DE LA CABECERA SALE DEL CUERPO DEL TITULO, y no de un numero.
+   Medir las CAJAS engana: las dos daban 510 y "cuadraban", pero el h2 lleva
+   `text-wrap:balance` y parte en dos lineas que NO llegan a su borde, asi que
+   la TINTA del parrafo sobresalia 132,6 px de la del titulo - el texto pequeno
+   saliendose del grande, que es lo que se ve. Y un ancho fijo tampoco vale: el
+   h2 va en `clamp` con `vw` y encoge, el `em` del parrafo no (con 22em el
+   desvio era -3 en 1280 y +108 en 800).
+   Medido: la tinta del h2 es 8,19 x su font-size, CONSTANTE de 800 a 1600. */
+.friso__cab{--tit:clamp(30px,3.6vw,50px)}
 .friso__cab > p{max-width:30em}
+/* Por encima de 1080 la cabecera va alineada a la IZQUIERDA y ahi se ve el
+   desajuste; por debajo se centra y no existe (S del movil, mas abajo).
+   El 7,8 no es el 8,19 que alinearia exacto, y es a proposito: con 8,19 el
+   corte cae en 48/50/48/10 y vuelve la huerfana de "de verdad.", y a 3 px de
+   distancia el corte cambia - buscar el 0 es fragil. La banda 7,6-7,9 da
+   44/44/45/23 en 1280 Y en 1600; se toma el centro. Deja el parrafo 14-19 px
+   mas estrecho que el titulo, que es la jerarquia correcta.
+   El suelo de 20em es para 1081-1200: sin el, el parrafo baja de 340 px y
+   vuelve a partirse en cinco lineas con huerfana. */
+@media (min-width:1081px){
+  .friso__cab > p{max-width:max(20em,calc(var(--tit) * 7.8))}
+}
 /* EL PARRAFO SALIA A 0 px DE SU TITULO y con la mitad de su ancho -578 contra
    1137-, asi que colgaba a la izquierda bajo un h2 del doble de largo. Y
    ensancharlo NO vale: medido, de 38em en adelante cae en dos lineas de 80
@@ -1083,7 +1104,7 @@ a.boton2{background-size:auto;box-shadow:0 0 0 1px rgba(227,197,116,.42),
    la seccion del juego y el del reparto- van los DOS en oro luz a 30 px con su
    sombra, y este se habia quedado en hueso a 25,5 px y sin ninguna. No es un
    tratamiento nuevo: es el que le faltaba. */
-.friso__cab h2{font:600 clamp(30px,3.6vw,50px)/1.14 var(--display);
+.friso__cab h2{font:600 var(--tit,clamp(30px,3.6vw,50px))/1.14 var(--display);
   letter-spacing:-.008em;color:var(--oro-luz);
   text-shadow:0 2px 0 rgba(20,13,4,.75),0 3px 12px rgba(0,0,0,.7)}
 
@@ -1434,7 +1455,28 @@ a.boton2{background-size:auto;box-shadow:0 0 0 1px rgba(227,197,116,.42),
 .etapas__cierre{position:relative;z-index:2;max-width:44em;margin:clamp(30px,3.4vw,46px) auto 0;
   text-align:center;font-size:clamp(15px,1.14vw,17px);line-height:1.68;
   color:rgba(237,234,226,.78)}
-.etapas__medio{margin-top:clamp(52px,5.6vw,80px)}
+/*  LOS DOS SEPARADORES DE LOS TRES SEGMENTOS 
+   Son LA MISMA barra dorada de la pista del tirador, TUMBADA: el degradado que
+   da la luz por el centro y la deja morir en los cabos, la sombra del corte y
+   el halo. Lo unico que cambia es el eje - el degradado pasa de 180deg a 90deg
+   y la sombra del corte, del costado al canto de abajo. Un filete de un color
+   plano seria una raya (S4 del proyecto).
+   EL LARGO SALE DE MEDIR: `.etapas__medio`, `.orient__cuerpo` y
+   `.etapas__rejilla` miden los TRES 1137 px y comparten cantos (64 -> 1201 en
+   1280), asi que a ancho completo del bloque la barra cuadra exacta con la
+   rejilla de arriba. Son 2,9 veces el titulo, que era lo pedido.
+   Y NO METE AIRE NUEVO: va a la MITAD del margen que ya separaba los
+   segmentos, o sea en el hueco que ya estaba vacio (medido en movil: 26 px por
+   arriba y 23 por abajo). El margen y la posicion salen de la MISMA variable,
+   asi que no pueden separarse. */
+.etapas__medio{--sep:clamp(52px,5.6vw,80px);margin-top:var(--sep);
+  position:relative}
+.etapas__medio::before{content:'';position:absolute;left:0;right:0;
+  top:calc(var(--sep) / -2);height:3px;border-radius:1px;
+  background:linear-gradient(90deg,transparent,rgba(227,197,116,.22) 14%,
+    rgba(244,220,158,.95) 50%,rgba(227,197,116,.22) 86%,transparent);
+  box-shadow:inset 0 -1px 0 rgba(0,0,0,.5),0 1px 0 rgba(0,0,0,.34),
+             0 0 9px rgba(255,203,102,.4)}
 
 /*  EL PARTE DE FALLOS - el tercer item 
    La captura sale del juego COMPILADO (`_capinforme.py`) y va a 1152x976, o
