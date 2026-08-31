@@ -1056,6 +1056,16 @@ a.boton2{background-size:auto;box-shadow:0 0 0 1px rgba(227,197,116,.42),
    - y una banda de texto de canto a canto es justo lo que se lee como
    "pegado". Mismo tope que `.centrado > p`. */
 .friso__cab > p{max-width:34em}
+/* EL PARRAFO SALIA A 0 px DE SU TITULO y con la mitad de su ancho -578 contra
+   1137-, asi que colgaba a la izquierda bajo un h2 del doble de largo. Y
+   ensancharlo NO vale: medido, de 38em en adelante cae en dos lineas de 80
+   caracteres, y la regla tipografica pide 45-70 (la misma que ya obligo a no
+   justificar la lupa en el movil). Lo que se topa es el TITULO, a la medida
+   del parrafo: asi el h2 cae en dos lineas y los dos bloques se leen como uno.
+   Va en el <div> que lo envuelve y no en el h2, porque un `em` en el h2 se
+   resuelve contra sus 46 px y daria 1.566. */
+.friso__cab > div{max-width:32em}
+.friso__cab > p.justo{margin-top:clamp(13px,1.4vw,19px)}
 
 /* "HABRIA QUE DESTACARLO UN POCO": los otros dos h2 sobre fondo oscuro -el de
    la seccion del juego y el del reparto- van los DOS en oro luz a 30 px con su
@@ -1184,8 +1194,8 @@ a.boton2{background-size:auto;box-shadow:0 0 0 1px rgba(227,197,116,.42),
    ya vale 700, asi que el calculo da cero y no mueve nada. */
 .orient{position:relative;z-index:2;margin:0 auto}
 .orient__tirador{list-style:none;cursor:pointer;position:relative;display:block;
-  max-width:700px;margin:0 auto;
-  padding:clamp(20px,2.2vw,28px) clamp(46px,5vw,64px) clamp(34px,3.4vw,42px);
+  max-width:840px;margin:0 auto;
+  padding:clamp(20px,2.2vw,28px) clamp(46px,5vw,64px) clamp(22px,2.4vw,30px);
   text-align:center;border-radius:13px;border:1px solid rgba(227,197,116,.26);
   background:radial-gradient(120% 90% at 20% 0%,rgba(255,232,178,.1),transparent 64%),
              linear-gradient(180deg,rgba(227,197,116,.085),rgba(227,197,116,.02) 62%,
@@ -1220,17 +1230,23 @@ a.boton2{background-size:auto;box-shadow:0 0 0 1px rgba(227,197,116,.42),
 .orient__esq:nth-of-type(2){top:9px;right:9px;border-left:0;border-bottom:0}
 .orient__esq:nth-of-type(3){bottom:9px;left:9px;border-right:0;border-top:0}
 .orient__esq:nth-of-type(4){bottom:9px;right:9px;border-left:0;border-top:0}
-.orient__rot{display:block;font:600 clamp(10.5px,.86vw,11.5px)/1.6 var(--lapida);
+.orient__rot{display:block;font:600 clamp(11.5px,1vw,13px)/1.6 var(--lapida);
   color:rgba(227,197,116,.72);letter-spacing:.24em;text-indent:.24em;
   text-transform:uppercase}
 /* EL TITULO NO ES FLEX, y eso importa: el marcador de tildes envuelve cada
    vocal acentuada en un <t>, y dentro de un flex con `gap` ese <t> se vuelve
    ITEM y parte la palabra ("pedag o gicas"). Ya paso dos veces (S3). */
 .orient__tit{display:block;margin:5px 0 6px;
-  font:600 clamp(25px,2.5vw,35px)/1.16 var(--display);color:var(--oro-luz);
+  font:600 clamp(29px,3vw,42px)/1.16 var(--display);color:var(--oro-luz);
   letter-spacing:-.004em;text-shadow:0 2px 0 rgba(20,13,4,.66)}
-.orient__pista{display:block;font-size:clamp(13.5px,1.02vw,15px);line-height:1.6;
-  color:rgba(237,234,226,.66)}
+/* LA PISTA. Los separadores en oro y un pelo de letter-spacing: un toque, no
+   un tratamiento. NO es flex: el marcador de tildes mete un <t> por vocal
+   acentuada y un <t> dentro de un contenedor con `gap` se vuelve ITEM y parte
+   la palabra - ya paso dos veces (S3). Con `inline` no puede pasar. */
+.orient__pista{display:block;font-size:clamp(15px,1.2vw,17.5px);line-height:1.62;
+  color:rgba(237,234,226,.7);letter-spacing:.012em}
+.orient__pista i{font-style:normal;color:var(--oro-claro);opacity:.85;
+  padding:0 .42em}
 /* EL CHEVRON VA ABAJO Y CENTRADO, no a la derecha: puesto al costado obligaba
    a reservarle ancho y dejaba la placa ASIMETRICA - medido, el filete
    izquierdo caia a 23 px del borde y el derecho a 60, o sea 37 de desvio, y
@@ -1239,16 +1255,37 @@ a.boton2{background-size:auto;box-shadow:0 0 0 1px rgba(227,197,116,.42),
 /* LA PILDORA, para que se vea que esto se despliega. El chevron solo no
    bastaba: hay que decirlo con una PALABRA. Cambia sola con `[open]` y sin JS
    -son dos <span> y una regla de display-, igual que hace el <details> nativo
-   con todo lo demas. */
-.orient__accion{position:absolute;left:50%;bottom:clamp(11px,1.2vw,15px);
-  transform:translateX(-50%);display:inline-flex;align-items:center;gap:8px;
-  padding:6px 15px 7px;border-radius:999px;white-space:nowrap;
-  border:1px solid rgba(227,197,116,.34);background:rgba(12,9,6,.55);
-  font:600 clamp(10.5px,.86vw,11.5px)/1 var(--lapida);color:var(--oro-claro);
+   con todo lo demas.
+
+   VA EN EL FLUJO Y NO `absolute`: pegada al canto rozaba la pista de arriba, y
+   con `margin-top` la separacion es explicita en vez de depender del `padding`
+   del padre. Se centra sola porque el tirador va centrado.
+
+   Y LLEVA LA ALEACION DEL S4 en pequeno -canto duro, luz dentro arriba, sombra
+   dentro abajo y el degradado que rebota a claro en el ultimo tramo, que es lo
+   unico que separa "metal" de "color plano"-, en bronce: el oro macizo es
+   `button.boton`, o sea "Jugar" y "Descargar". */
+.orient__accion{display:inline-flex;align-items:center;gap:9px;
+  margin-top:clamp(17px,1.8vw,24px);
+  padding:9px 19px 10px;border-radius:999px;white-space:nowrap;
+  border:1px solid rgba(227,197,116,.4);
+  background:linear-gradient(180deg,rgba(96,76,44,.9),rgba(46,35,19,.92) 58%,
+                             rgba(74,58,32,.9));
+  box-shadow:inset 0 1px 0 rgba(255,240,200,.22),
+             inset 0 -2px 3px rgba(0,0,0,.45),
+             0 2px 0 -1px rgba(0,0,0,.6),
+             0 8px 16px -10px rgba(0,0,0,.9);
+  font:600 clamp(11.5px,.95vw,12.5px)/1 var(--lapida);color:var(--oro-luz);
   letter-spacing:.18em;text-indent:.18em;text-transform:uppercase;
-  transition:border-color .3s,color .3s,background .3s}
-.orient__tirador:hover .orient__accion{border-color:rgba(227,197,116,.6);
-  color:var(--oro-luz);background:rgba(20,15,8,.7)}
+  text-shadow:0 1px 0 rgba(0,0,0,.5);
+  transition:border-color .3s,color .3s,box-shadow .3s,transform .12s}
+.orient__tirador:hover .orient__accion{border-color:rgba(227,197,116,.72);
+  box-shadow:inset 0 1px 0 rgba(255,240,200,.3),
+             inset 0 -2px 3px rgba(0,0,0,.45),
+             0 2px 0 -1px rgba(0,0,0,.6),
+             0 8px 16px -10px rgba(0,0,0,.9),
+             0 0 22px -6px rgba(255,203,102,.55)}
+.orient__tirador:active .orient__accion{transform:translateY(1px)}
 .orient__verbo--cerrar{display:none}
 .orient[open] .orient__verbo--abrir{display:none}
 .orient[open] .orient__verbo--cerrar{display:inline}
@@ -1267,23 +1304,6 @@ a.boton2{background-size:auto;box-shadow:0 0 0 1px rgba(227,197,116,.42),
   background:linear-gradient(90deg,rgba(227,197,116,.42),transparent)}
 /* el cuerpo va al ancho de la seccion: las tres cajas piden sitio */
 .orient__cuerpo{padding-top:clamp(30px,3.4vw,46px)}
-/* EL SUBAPARTADO, con mayuscula inicial y con peso. Era un `.rotulo` de 12 px
-   en versalitas y se leia como un pie; ahora va en la serif de display, en oro
-   y con su filete encima, que es lo que lo hace un APARTADO y no una etiqueta.
-   SIN `text-transform`, o la mayuscula inicial no se veria. */
-/* VA CON `.centrado > p.` DELANTE, y no con `.etapas__paso` a secas: el paso
-   es un <p> hijo directo de `.centrado`, y `.centrado > p` es (0,1,1) - le
-   gana a (0,1,0) y le imponia su `clamp(17px,1.32vw,19px)`. Medido antes de
-   verlo: la regla decia minimo 19 px y el computado daba 17, o sea que el
-   subapartado NUNCA tuvo el tamano que se le puso, ni en escritorio. Es la
-   piedra del S3, y en esta ronda ya es la quinta vez. */
-.centrado > p.etapas__paso{position:relative;display:inline-block;
-  margin:0 auto clamp(7px,.8vw,11px);padding-top:clamp(15px,1.6vw,21px);
-  font:600 clamp(19px,1.62vw,24px)/1.25 var(--display);color:var(--oro-luz);
-  letter-spacing:.005em;text-shadow:0 2px 0 rgba(20,13,4,.6)}
-.centrado > p.etapas__paso::before{content:'';position:absolute;top:0;left:50%;
-  transform:translateX(-50%);width:74px;height:1px;
-  background:linear-gradient(90deg,transparent,rgba(227,197,116,.5),transparent)}
 
 /* TRES COLUMNAS, DOS O UNA, y EXPLICITAS: con `auto-fit` el CSS no sabe
    cuantas columnas hay, y hace falta saberlo para lo de abajo. Los cortes
@@ -1322,8 +1342,20 @@ a.boton2{background-size:auto;box-shadow:0 0 0 1px rgba(227,197,116,.42),
 .etapas__caja h3{font:600 clamp(21px,1.72vw,26px)/1.22 var(--display);
   color:var(--oro-luz);margin:0 0 12px;letter-spacing:-.005em;
   text-shadow:0 2px 0 rgba(20,13,4,.6)}
+/* JUSTIFICADO, que lo pidio Oscar. El numero queda dicho porque la medida es
+   corta: en cajas de 314 px el peor hueco entre palabras pasa de 1,00 a 4,21
+   veces el espacio normal (medio 2,12), y el rango normal de un justificado
+   web es 1,2-2,0 (S5 septies). Con esta medida no hay ajuste que lo arregle;
+   se revierte quitando la linea de `text-align`. */
 .etapas__caja p{font-size:clamp(15px,1.14vw,17px);line-height:1.68;
-  color:rgba(237,234,226,.82)}
+  color:rgba(237,234,226,.82);text-align:justify;
+  text-align-last:left;hyphens:auto}
+/* EL ROTULO DE ETAPA NO SE JUSTIFICA. Es un <p>, asi que le llegaba el
+   `justify` de arriba, y en versalitas con `letter-spacing` de .2em eso abre
+   huecos enormes: se leia "PRIMARIA   Y   PRIMER   CICLO". Se vio en la
+   captura, no en los numeros - la medida del hueco lo daba por bueno porque
+   mide el ESPACIO, y aqui lo que canta es el espacio MAS el interletraje. */
+.etapas__caja p.etapas__dato{text-align:left}
 .etapas__caja p+p{margin-top:12px}
 .etapas__caja b{font-weight:600;color:rgba(255,246,220,.93)}
 .etapas__caja em{font-style:italic;color:rgba(255,246,220,.88)}
@@ -1629,15 +1661,14 @@ a.boton2{background-size:auto;box-shadow:0 0 0 1px rgba(227,197,116,.42),
         <span class="orient__fle orient__fle--der" aria-hidden="true"></span>
         <span class="orient__rot">Para quien lo lleve al aula o precise un plan de aprendizaje</span>
         <span class="orient__tit">Orientaciones pedag&#243;gicas</span>
-        <span class="orient__pista">Qu&#233; mide cada cap&#237;tulo &#183; los tres modos &#183; el parte de fallos</span>
+        <span class="orient__pista"><span>Qu&#233; mide cada cap&#237;tulo</span><i aria-hidden="true">&#183;</i><span>Los tres modos</span><i aria-hidden="true">&#183;</i><span>El parte de fallos</span></span>
         <span class="orient__accion" aria-hidden="true"><span class="orient__verbo orient__verbo--abrir">Desplegar</span><span class="orient__verbo orient__verbo--cerrar">Plegar</span><span class="orient__abre"><svg viewBox="0 0 15 9"><path d="M1.4 1.4L7.5 7.5l6.1-6.1"/></svg></span></span>
       </summary>
 
       <div class="orient__cuerpo">
 
         <div class="centrado">
-          <p class="etapas__paso">El temario</p>
-          <h2>Qu&#233; mide cada cap&#237;tulo</h2>
+            <h2>Qu&#233; mide cada cap&#237;tulo</h2>
           <p>Los ocho cap&#237;tulos siguen el orden de la Ortograf&#237;a de la RAE: primero las reglas que se aplican mirando la palabra, despu&#233;s los casos en que la palabra no basta, y al final el examen. Se pueden jugar en cualquier orden, pero est&#225;n escritos para leerse as&#237;.</p>
         </div>
 
@@ -1654,9 +1685,8 @@ a.boton2{background-size:auto;box-shadow:0 0 0 1px rgba(227,197,116,.42),
           <div class="etapas__caja">
             <p class="etapas__romanos"><span class="solotexto">Cap&#237;tulos 6 y 7.</span><span class="romano" aria-hidden="true">VI</span><span class="romano" aria-hidden="true">VII</span></p>
             <h3>Lo que la regla no dice</h3>
-            <p>Aqu&#237; la palabra deja de bastar. <b>En el sexto</b> hay que saber de d&#243;nde viene: <em>esc&#225;ner</em> lleva tilde porque el espa&#241;ol la adopt&#243;, y <em>marketing</em> no la lleva porque sigue siendo de fuera. Las dos son llanas acabadas en consonante: la regla dir&#237;a lo mismo de las dos. Eso no se deduce, se conoce.</p>
+            <p><b>Estos dos cap&#237;tulos suben la dificultad</b>, y no por el reloj: aqu&#237; la palabra deja de bastar. <b>En el sexto</b> hay que saber de d&#243;nde viene: <em>esc&#225;ner</em> lleva tilde porque el espa&#241;ol la adopt&#243;, y <em>marketing</em> no la lleva porque sigue siendo de fuera. Las dos son llanas acabadas en consonante: la regla dir&#237;a lo mismo de las dos. Eso no se deduce, se conoce.</p>
             <p><b>En el s&#233;ptimo</b>, qu&#233; hace la palabra en la frase: <em>tu</em> y <em>t&#250;</em> se escriben con las mismas letras, y lo que las separa es que una es posesivo y la otra pronombre.</p>
-            <p>Quien llega bien al quinto y se atasca en el sexto no ha empeorado: le est&#225;n pidiendo otra cosa.</p>
             <p class="etapas__dato"><span class="rotulo">Segundo ciclo de Secundaria y Bachillerato</span></p>
           </div>
 
@@ -1671,8 +1701,7 @@ a.boton2{background-size:auto;box-shadow:0 0 0 1px rgba(227,197,116,.42),
         </div>
 
         <div class="centrado etapas__medio">
-          <p class="etapas__paso">La dificultad</p>
-          <h2>Los tres modos de dificultad</h2>
+            <h2>Los tres modos de dificultad</h2>
           <p>Se eligen en la portada de cada cap&#237;tulo y cambian dos cosas: cu&#225;ntos corazones se tienen y cu&#225;nto tiempo hay para contestar. No cambian ni las palabras, ni las reglas, ni los jefes.</p>
         </div>
 
@@ -1704,8 +1733,7 @@ a.boton2{background-size:auto;box-shadow:0 0 0 1px rgba(227,197,116,.42),
         <p class="etapas__cierre">Los tres modos siguen el mismo tramo que los cap&#237;tulos, pero <b>la etapa es s&#243;lo un punto de partida: el modo se elige por soltura, no por edad.</b> Un alumno de acceso que est&#225; pele&#225;ndose con los hiatos aprende m&#225;s en Tranquilo que fallando por tiempo en Extremo.</p>
 
         <div class="centrado etapas__medio">
-          <p class="etapas__paso">Lo que te llevas</p>
-          <h2>El parte de fallos</h2>
+            <h2>El parte de fallos</h2>
           <p>Al terminar cada cap&#237;tulo se descarga la lista de fallos: la palabra, c&#243;mo se escribi&#243;, qu&#233; tipo de fallo fue y si acab&#243; acert&#225;ndola m&#225;s adelante. Es un archivo de hoja de c&#225;lculo, as&#237; que treinta partes se juntan en una tabla.</p>
         </div>
 
@@ -1795,7 +1823,7 @@ a.boton2{background-size:auto;box-shadow:0 0 0 1px rgba(227,197,116,.42),
     '.titulo, .entradilla, .rotulo, .centrado h2, .friso__cab h2, ' +
     '.reparto__texto h2, .gesto__texto h2, .leccion, .nota p, ' +
     '.etapas__caja h3, .etapas__modo strong, .orient__tit, ' +
-    '.etapas__paso, .orient__pista, .etapas__caja p, .etapas__cifra, ' +
+    '.orient__pista span, .etapas__caja p, .etapas__cifra, ' +
     '.etapas__cierre, .parte figcaption, ' +
     '.friso .titulillo, .chapa em, .centrado > p, .friso__cab > p, ' +
     '.gesto__texto > p, ' +
