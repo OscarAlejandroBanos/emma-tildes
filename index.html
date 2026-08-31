@@ -1150,6 +1150,48 @@ a.boton2{background-size:auto;box-shadow:0 0 0 1px rgba(227,197,116,.42),
   .friso__tira{grid-template-columns:repeat(2,minmax(0,1fr))}
   .romano{width:34px;height:34px;font-size:12px}
 }
+/* ==== LA FICHA DE ETAPAS ====
+   Las cajas NO estrenan lenguaje: el borde, el fondo y la luz de dentro son
+   los de `.sellos p`, que ya estaban. Lo unico propio es la reja y el dato de
+   etapa, que va separado por un filete para que se lea como una ficha. */
+.etapas{padding:clamp(60px,7vw,100px) clamp(22px,5vw,84px) clamp(66px,7.4vw,108px)}
+.etapas__rejilla{display:grid;gap:clamp(14px,1.7vw,24px);position:relative;z-index:2;
+  grid-template-columns:repeat(auto-fit,minmax(min(100%,clamp(250px,25vw,330px)),1fr));
+  margin-top:clamp(28px,3.2vw,44px)}
+.etapas__caja{padding:clamp(20px,1.9vw,28px) clamp(20px,1.9vw,28px) clamp(18px,1.7vw,24px);
+  border-radius:14px;border:1px solid rgba(227,197,116,.2);
+  background:linear-gradient(180deg,rgba(227,197,116,.07),rgba(227,197,116,.016));
+  box-shadow:inset 0 1px 0 rgba(255,246,220,.07),0 10px 26px -18px rgba(0,0,0,.8);
+  display:flex;flex-direction:column}
+.etapas__caja h3{font:600 clamp(21px,1.72vw,26px)/1.22 var(--display);
+  color:var(--oro-luz);margin:7px 0 12px;letter-spacing:-.005em;
+  text-shadow:0 2px 0 rgba(20,13,4,.6)}
+.etapas__caja p{font-size:clamp(15px,1.14vw,17px);line-height:1.68;
+  color:rgba(237,234,226,.82)}
+.etapas__caja p+p{margin-top:12px}
+.etapas__caja b{font-weight:600;color:rgba(255,246,220,.93)}
+.etapas__caja em{font-style:italic;color:rgba(255,246,220,.88)}
+/* la lista de reglas del primer tramo: los puntos separan, no adornan */
+.etapas__lista{color:rgba(240,236,226,.9)}
+/* el dato de etapa cierra la caja y se pega abajo, asi las tres cuadran
+   aunque su texto mida distinto */
+.etapas__dato{margin-top:auto;padding-top:15px;
+  border-top:1px solid rgba(227,197,116,.17)}
+.etapas__dato .rotulo{font-size:clamp(11px,.92vw,12.5px);letter-spacing:.2em;
+  text-indent:.2em;line-height:1.55}
+.etapas__modo .rotulo{margin-bottom:2px}
+.etapas__modo strong{display:block;font:600 clamp(20px,1.6vw,24px)/1.2 var(--display);
+  color:var(--oro-luz);margin:4px 0 4px;text-shadow:0 2px 0 rgba(20,13,4,.6)}
+.etapas__modo .etapas__cifra{display:block;margin-bottom:12px;
+  font-size:clamp(14px,1.06vw,15.5px);color:var(--oro-claro);opacity:.94}
+.etapas__cierre{position:relative;z-index:2;max-width:44em;margin:clamp(30px,3.4vw,46px) auto 0;
+  text-align:center;font-size:clamp(15px,1.14vw,17px);line-height:1.68;
+  color:rgba(237,234,226,.78)}
+.etapas__medio{margin-top:clamp(52px,5.6vw,80px)}
+@media (max-width:640px){
+  .etapas__caja{padding:20px 20px 18px}
+}
+
 /* en un movil no hay raton: la linterna se queda quieta en el centro y las
    tildes se apagan, que ahi lo que sobra es bateria */
 @media (hover:none){
@@ -1346,6 +1388,88 @@ a.boton2{background-size:auto;box-shadow:0 0 0 1px rgba(227,197,116,.42),
   </div>
 </section>
 
+<section class="etapas grano losa" id="etapas">
+  <div class="aire" aria-hidden="true"></div>
+  <div class="tela tela--tenue" aria-hidden="true"></div>
+  <div class="ocluye" aria-hidden="true"></div>
+  <div class="remate remate--alto" aria-hidden="true"><b></b><b></b><b></b></div>
+  <div class="dentro">
+
+    <div class="centrado entra">
+      <p class="rotulo">C&#243;mo est&#225; pensado</p>
+      <h2>Qu&#233; mide cada cap&#237;tulo</h2>
+      <p>Los ocho cap&#237;tulos siguen el orden de la Ortograf&#237;a de la RAE: primero las reglas que se aplican mirando la palabra, despu&#233;s los casos en que la palabra no basta, y al final el examen. Se pueden jugar en cualquier orden, pero est&#225;n escritos para leerse as&#237;.</p>
+    </div>
+
+    <div class="etapas__rejilla entra">
+
+      <div class="etapas__caja">
+        <p class="rotulo">Cap&#237;tulos 1 a 5</p>
+        <h3>La regla</h3>
+        <p class="etapas__lista">Agudas y llanas &#183; esdr&#250;julas y sobresdr&#250;julas &#183; diptongos y triptongos &#183; palabras compuestas y acabadas en -y &#183; <b>hiatos</b>.</p>
+        <p>Todo esto se resuelve <b>con la palabra delante</b>: se cuenta d&#243;nde carga la voz, se mira en qu&#233; letra acaba y se aplica la regla. No hay que saber nada m&#225;s, y es donde se automatiza el gesto: al terminar el quinto, poner la tilde deber&#237;a salir sin pensarlo.</p>
+        <p class="etapas__dato"><span class="rotulo">Primaria y primer ciclo de Secundaria</span></p>
+      </div>
+
+      <div class="etapas__caja">
+        <p class="rotulo">Cap&#237;tulos 6 y 7</p>
+        <h3>Lo que la regla no dice</h3>
+        <p>Aqu&#237; la palabra deja de bastar. <b>En el sexto</b> hay que saber de d&#243;nde viene: <em>esc&#225;ner</em> lleva tilde porque el espa&#241;ol la adopt&#243; y le aplica sus reglas, y <em>marketing</em> no la lleva porque sigue siendo una palabra de fuera. Las dos son llanas acabadas en consonante &#8212; la regla dir&#237;a lo mismo de las dos. Eso no se deduce, se conoce.</p>
+        <p><b>En el s&#233;ptimo</b> hay que saber qu&#233; hace la palabra en la frase: <em>tu</em> y <em>t&#250;</em> se escriben con las mismas letras, y lo que las separa no es la ortograf&#237;a, es que una es posesivo y la otra pronombre. Por eso el juego no pide poner la tilde: pide <b>automatizar qu&#233; funci&#243;n hace</b>.</p>
+        <p>Si alguien llega bien hasta el quinto nivel y se atasca en el sexto, no ha empeorado: le est&#225;n pidiendo otra cosa.</p>
+        <p class="etapas__dato"><span class="rotulo">Segundo ciclo de Secundaria y Bachillerato</span></p>
+      </div>
+
+      <div class="etapas__caja">
+        <p class="rotulo">Cap&#237;tulo 8</p>
+        <h3>El examen</h3>
+        <p>Diez convocatorias reales de las pruebas de acceso a la universidad para <b>mayores de 25 a&#241;os de Catalu&#241;a</b>, con sus palabras y sus enunciados tal como salieron. Se repiten palabras entre convocatorias porque <b>en el examen se repiten</b>, y el juego lo avisa cuando pasa.</p>
+        <p>Y trae un gesto que no aparece antes: separar en s&#237;labas. No es un adorno &#8212; es lo que decide d&#243;nde cae la tilde, y es lo que distingue <em>o-&#237;r</em> de <em>huir</em>.</p>
+        <p class="etapas__dato"><span class="rotulo">Pruebas de acceso</span></p>
+      </div>
+
+    </div>
+
+    <div class="centrado entra etapas__medio">
+      <p class="rotulo">Tranquilo &#183; Desafiante &#183; Extremo</p>
+      <h2>Los tres modos</h2>
+      <p>Se eligen en la portada de cada cap&#237;tulo y cambian dos cosas: cu&#225;ntos corazones se tienen y cu&#225;nto tiempo hay para contestar. No cambian ni las palabras, ni las reglas, ni los jefes.</p>
+    </div>
+
+    <div class="etapas__rejilla entra">
+
+      <div class="etapas__caja etapas__modo">
+        <strong>Tranquilo</strong>
+        <span class="etapas__cifra">5 corazones &#183; el doble de tiempo</span>
+        <p>Para quien llega nuevo a un cap&#237;tulo. Es el que sale por defecto.</p>
+        <p class="etapas__dato"><span class="rotulo">Primaria y primer ciclo de Secundaria</span></p>
+      </div>
+
+      <div class="etapas__caja etapas__modo">
+        <strong>Desafiante</strong>
+        <span class="etapas__cifra">5 corazones &#183; un 50&nbsp;% m&#225;s de tiempo</span>
+        <p>Cuando la regla ya sale sin pararse a pensarla.</p>
+        <p class="etapas__dato"><span class="rotulo">Segundo ciclo de Secundaria y Bachillerato</span></p>
+      </div>
+
+      <div class="etapas__caja etapas__modo">
+        <strong>Extremo</strong>
+        <span class="etapas__cifra">4 corazones &#183; el tiempo justo</span>
+        <p>El juego como se concibi&#243;, y el reloj apretado es la condici&#243;n del examen de verdad.</p>
+        <p class="etapas__dato"><span class="rotulo">Ciclos formativos y pruebas de acceso</span></p>
+      </div>
+
+    </div>
+
+    <p class="etapas__cierre entra">Los tres modos siguen el mismo tramo que los cap&#237;tulos, pero <b>la etapa es s&#243;lo un punto de partida: el modo se elige por soltura, no por edad.</b> Un alumno de acceso que est&#225; pele&#225;ndose con los hiatos aprende m&#225;s en Tranquilo que fallando por tiempo en Extremo.</p>
+
+    <p class="etapas__cierre entra"><b>Y por eso el modo dice algo.</b> Con el tiempo doblado, quien no termina un cap&#237;tulo es porque le falta la regla, no la velocidad: son dos problemas distintos y se arreglan de forma distinta. Con el reloj apretado los dos fallan igual y no hay manera de saber cu&#225;l es cu&#225;l.</p>
+
+    <p class="etapas__cierre entra">Al terminar cada cap&#237;tulo <b>se descarga la lista de fallos</b>: la palabra, c&#243;mo se escribi&#243;, qu&#233; tipo de fallo fue &#8212; tilde que falta, tilde de m&#225;s, tilde en la vocal equivocada, tiempo agotado &#8212; y si acab&#243; acert&#225;ndola m&#225;s adelante.</p>
+
+  </div>
+</section>
+
 <section class="reparto grano losa" id="reparto">
   <div class="aire" aria-hidden="true"></div>
   <div class="tela tela--tenue" aria-hidden="true"></div>
@@ -1420,6 +1544,7 @@ a.boton2{background-size:auto;box-shadow:0 0 0 1px rgba(227,197,116,.42),
   var conTilde = document.querySelectorAll(
     '.titulo, .entradilla, .rotulo, .centrado h2, .friso__cab h2, ' +
     '.reparto__texto h2, .gesto__texto h2, .leccion, .nota p, ' +
+    '.etapas__caja h3, .etapas__modo strong, ' +
     '.friso .titulillo, .chapa em, .centrado > p, .friso__cab > p, ' +
     '.gesto__texto > p, ' +
     '.reparto__texto > p, .pieficha');
