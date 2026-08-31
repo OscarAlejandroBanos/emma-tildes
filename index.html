@@ -1034,8 +1034,13 @@ a.boton2{background-size:auto;box-shadow:0 0 0 1px rgba(227,197,116,.42),
    CONEXI O N" del cartel (S3), aqui otra vez. Con el texto envuelto, el flex
    solo ve dos items: el rombo y la frase. */
 .suelto span{min-width:0}
-/* la cabecera del friso centra ESTE elemento y nada mas */
-.friso__cab{text-align:left}
+/* LA CABECERA VA CENTRADA ENTERA. Centrar solo el parrafo -que es lo que se
+   pidio al pie de la letra- deja el titulo pegado al canto izquierdo y el
+   parrafo flotando en el medio: dos bloques desligados. Se vio MIRANDO la
+   captura; los numeros decian 75 % y centrado, o sea lo pedido.
+   Y no es un invento: es lo que la pagina ya hace por debajo de 1080 px
+   (el bloque del movil, mas abajo) y lo que hace la pildora de debajo. */
+.friso__cab{text-align:center}
 .friso__cab .suelto{display:flex;width:max-content;max-width:100%}
 
 /* EL FRISO ERA LA UNICA SECCION SIN MARGEN LATERAL, y eso no se decidio: se
@@ -1060,28 +1065,20 @@ a.boton2{background-size:auto;box-shadow:0 0 0 1px rgba(227,197,116,.42),
    misma que ya obligo a no justificar la lupa en el movil (S16 del CLAUDE.md)
    - y una banda de texto de canto a canto es justo lo que se lee como
    "pegado". Mismo tope que `.centrado > p`. */
-/* LA MEDIDA DE LA CABECERA SALE DEL CUERPO DEL TITULO, y no de un numero.
-   Medir las CAJAS engana: las dos daban 510 y "cuadraban", pero el h2 lleva
-   `text-wrap:balance` y parte en dos lineas que NO llegan a su borde, asi que
-   la TINTA del parrafo sobresalia 132,6 px de la del titulo - el texto pequeno
-   saliendose del grande, que es lo que se ve. Y un ancho fijo tampoco vale: el
-   h2 va en `clamp` con `vw` y encoge, el `em` del parrafo no (con 22em el
-   desvio era -3 en 1280 y +108 en 800).
-   Medido: la tinta del h2 es 8,19 x su font-size, CONSTANTE de 800 a 1600. */
-.friso__cab{--tit:clamp(30px,3.6vw,50px)}
-.friso__cab > p{max-width:30em}
-/* Por encima de 1080 la cabecera va alineada a la IZQUIERDA y ahi se ve el
-   desajuste; por debajo se centra y no existe (S del movil, mas abajo).
-   El 7,8 no es el 8,19 que alinearia exacto, y es a proposito: con 8,19 el
-   corte cae en 48/50/48/10 y vuelve la huerfana de "de verdad.", y a 3 px de
-   distancia el corte cambia - buscar el 0 es fragil. La banda 7,6-7,9 da
-   44/44/45/23 en 1280 Y en 1600; se toma el centro. Deja el parrafo 14-19 px
-   mas estrecho que el titulo, que es la jerarquia correcta.
-   El suelo de 20em es para 1081-1200: sin el, el parrafo baja de 340 px y
-   vuelve a partirse en cinco lineas con huerfana. */
-@media (min-width:1081px){
-  .friso__cab > p{max-width:max(20em,calc(var(--tit) * 7.8))}
-}
+/* EL PARRAFO VA CENTRADO Y A 3/4 DE LA PAGINA, y SIN justificar.
+   DESHACE el intento anterior, y con razon: yo habia atado su medida al cuerpo
+   del titulo para que cuadraran los cantos derechos, y eso lo estrechaba a 359
+   px en 1280 - con el texto justificado, los huecos entre palabras se abren
+   (medido: 1,95x el espacio normal en el peor caso). Se ve mas eso que el
+   desajuste que arreglaba. **Cuadrar un canto no compensa estropear el color
+   del parrafo.**
+   EL SUELO ES DE LEGIBILIDAD, no de estetica: en un movil el 75 % de 331 px son
+   248, o sea unos 32 caracteres por linea. Con `width:75%` mas `min-width`, el
+   ancho efectivo es el MAYOR de los dos, asi que por debajo de ~770 px la
+   medida pasa a ser el bloque entero. Una sola regla: sin media query y sin
+   depender del orden (S3). */
+.friso__cab > p{width:75%;max-width:none;min-width:min(100%,34em);
+  margin-inline:auto;margin-top:clamp(13px,1.4vw,19px);text-align:center}
 /* EL PARRAFO SALIA A 0 px DE SU TITULO y con la mitad de su ancho -578 contra
    1137-, asi que colgaba a la izquierda bajo un h2 del doble de largo. Y
    ensancharlo NO vale: medido, de 38em en adelante cae en dos lineas de 80
@@ -1094,17 +1091,16 @@ a.boton2{background-size:auto;box-shadow:0 0 0 1px rgba(227,197,116,.42),
    contra 17 px, y el div iba a 32em contra los 34 del parrafo: 544 contra 578,
    o sea que por la derecha no cuadraban - y con el parrafo justificado, que
    deja canto recto, eso se ve. */
-.friso__cab > div{max-width:30em}
+.friso__cab > div{max-width:30em;margin-inline:auto}
 /* y que las dos lineas del titulo se repartan solas si algun dia cambia el
    texto o la medida */
 .friso__cab h2{text-wrap:balance}
-.friso__cab > p.justo{margin-top:clamp(13px,1.4vw,19px)}
 
 /* "HABRIA QUE DESTACARLO UN POCO": los otros dos h2 sobre fondo oscuro -el de
    la seccion del juego y el del reparto- van los DOS en oro luz a 30 px con su
    sombra, y este se habia quedado en hueso a 25,5 px y sin ninguna. No es un
    tratamiento nuevo: es el que le faltaba. */
-.friso__cab h2{font:600 var(--tit,clamp(30px,3.6vw,50px))/1.14 var(--display);
+.friso__cab h2{font:600 clamp(30px,3.6vw,50px)/1.14 var(--display);
   letter-spacing:-.008em;color:var(--oro-luz);
   text-shadow:0 2px 0 rgba(20,13,4,.75),0 3px 12px rgba(0,0,0,.7)}
 
@@ -1698,7 +1694,7 @@ a.boton2{background-size:auto;box-shadow:0 0 0 1px rgba(227,197,116,.42),
         <p class="rotulo">Los ocho cap&#237;tulos</p>
         <h2>De las agudas y llanas al examen de acceso</h2>
       </div>
-      <p class="justo">Cada uno se abre y se juega en el navegador, con su lecci&#243;n, su jefe y su propio banco de palabras. El &#250;ltimo los pone a todos a prueba con ex&#225;menes de verdad.</p>
+      <p>Cada uno se abre y se juega en el navegador, con su lecci&#243;n, su jefe y su propio banco de palabras. El &#250;ltimo los pone a todos a prueba con ex&#225;menes de verdad.</p>
       <p class="suelto"><i aria-hidden="true"></i><span>Cada cap&#237;tulo es un archivo aparte: <b>se juega el que toque</b>, sin pasar por los anteriores</span></p>
     </div>
     <div class="friso__tira entra"><figure><a href="cap/1/" target="_blank" rel="noopener" title="Jugar el cap&#237;tulo 1 &#183; El aula vac&#237;a"><span class="marco"><span class="lam"><img src="img/06.webp" alt="Cap&#237;tulo 1, El aula vac&#237;a"><span class="jugar"><svg viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M2 1l9 5-9 5z"/></svg>Jugar</span></span></span><figcaption><span class="romano">I</span><span class="titulillo">El aula vac&#237;a</span><span class="leccion">Agudas y llanas</span></figcaption></a></figure><figure><a href="cap/2/" target="_blank" rel="noopener" title="Jugar el cap&#237;tulo 2 &#183; La sala de clasificaci&#243;n"><span class="marco"><span class="lam"><img src="img/07.webp" alt="Cap&#237;tulo 2, La sala de clasificaci&#243;n" loading="lazy"><span class="jugar"><svg viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M2 1l9 5-9 5z"/></svg>Jugar</span></span></span><figcaption><span class="romano">II</span><span class="titulillo">La sala de clasificaci&#243;n</span><span class="leccion">Esdr&#250;julas y sobresdr&#250;julas</span></figcaption></a></figure><figure><a href="cap/3/" target="_blank" rel="noopener" title="Jugar el cap&#237;tulo 3 &#183; El bosque"><span class="marco"><span class="lam"><img src="img/08.webp" alt="Cap&#237;tulo 3, El bosque" loading="lazy"><span class="jugar"><svg viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M2 1l9 5-9 5z"/></svg>Jugar</span></span></span><figcaption><span class="romano">III</span><span class="titulillo">El bosque</span><span class="leccion">Diptongos y triptongos</span></figcaption></a></figure><figure><a href="cap/4/" target="_blank" rel="noopener" title="Jugar el cap&#237;tulo 4 &#183; La UCI de la Dogtora"><span class="marco"><span class="lam"><img src="img/09.webp" alt="Cap&#237;tulo 4, La UCI de la Dogtora" loading="lazy"><span class="jugar"><svg viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M2 1l9 5-9 5z"/></svg>Jugar</span></span></span><figcaption><span class="romano">IV</span><span class="titulillo">La UCI de la Dogtora</span><span class="leccion">Compuestas y la -y final</span></figcaption></a></figure><figure><a href="cap/5/" target="_blank" rel="noopener" title="Jugar el cap&#237;tulo 5 &#183; El asedio a la escuela"><span class="marco"><span class="lam"><img src="img/10.webp" alt="Cap&#237;tulo 5, El asedio a la escuela" loading="lazy"><span class="jugar"><svg viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M2 1l9 5-9 5z"/></svg>Jugar</span></span></span><figcaption><span class="romano">V</span><span class="titulillo">El asedio a la escuela</span><span class="leccion">Hiatos</span></figcaption></a></figure><figure><a href="cap/6/" target="_blank" rel="noopener" title="Jugar el cap&#237;tulo 6 &#183; La avenida del reparto"><span class="marco"><span class="lam"><img src="img/11.webp" alt="Cap&#237;tulo 6, La avenida del reparto" loading="lazy"><span class="jugar"><svg viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M2 1l9 5-9 5z"/></svg>Jugar</span></span></span><figcaption><span class="romano">VI</span><span class="titulillo">La avenida del reparto</span><span class="leccion">Extranjerismos</span></figcaption></a></figure><figure><a href="cap/7/" target="_blank" rel="noopener" title="Jugar el cap&#237;tulo 7 &#183; El camino al castillo"><span class="marco"><span class="lam"><img src="img/12.webp" alt="Cap&#237;tulo 7, El camino al castillo" loading="lazy"><span class="jugar"><svg viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M2 1l9 5-9 5z"/></svg>Jugar</span></span></span><figcaption><span class="romano">VII</span><span class="titulillo">El camino al castillo</span><span class="leccion">Diacr&#237;ticas</span></figcaption></a></figure><figure><a href="cap/8/" target="_blank" rel="noopener" title="Jugar el cap&#237;tulo 8 &#183; La huida"><span class="marco"><span class="lam"><img src="img/13.webp" alt="Cap&#237;tulo 8, La huida" loading="lazy"><span class="jugar"><svg viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M2 1l9 5-9 5z"/></svg>Jugar</span></span></span><figcaption><span class="romano">VIII</span><span class="titulillo">La huida</span><span class="leccion">Ex&#225;menes PAU +25 oficiales</span></figcaption></a></figure></div>
