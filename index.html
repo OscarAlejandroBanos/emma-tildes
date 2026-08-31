@@ -1151,20 +1151,176 @@ a.boton2{background-size:auto;box-shadow:0 0 0 1px rgba(227,197,116,.42),
   .romano{width:34px;height:34px;font-size:12px}
 }
 /* ==== LA FICHA DE ETAPAS ====
-   Las cajas NO estrenan lenguaje: el borde, el fondo y la luz de dentro son
-   los de `.sellos p`, que ya estaban. Lo unico propio es la reja y el dato de
-   etapa, que va separado por un filete para que se lea como una ficha. */
-.etapas{padding:clamp(60px,7vw,100px) clamp(22px,5vw,84px) clamp(66px,7.4vw,108px)}
-.etapas__rejilla{display:grid;gap:clamp(14px,1.7vw,24px);position:relative;z-index:2;
-  grid-template-columns:repeat(auto-fit,minmax(min(100%,clamp(250px,25vw,330px)),1fr));
+   VA PLEGADA en un `<details>`: son 3.000 caracteres en una pagina que hasta
+   aqui respiraba -mas que las otras cuatro secciones juntas- y quien viene a
+   jugar no tiene por que pisarlos. `<details>` NATIVO y no un desplegable de
+   JS, que la pagina tiene `<noscript>` y sin JS esto tiene que abrirse igual.
+
+   NO ESTRENA LENGUAJE: el borde y el fondo de las cajas son los de
+   `.sellos p`, los medallones son los `.romano` del friso TAL CUAL -sin
+   variante de tamano, que duplicar esa receta seria tener dos-, el marco de
+   la captura es el de `.friso .lam` y el volumen es el del S4: luz dentro
+   arriba, sombra dentro abajo, extrusion DURA sin desenfoque y un gradiente
+   de luz sobre la superficie, que sin el el bisel es solo un marco flotando.
+
+   EL HUECO MUERTO, que era un fallo y no una opinion: `.etapas__dato` llevaba
+   `margin-top:auto` para pegarse al fondo de la caja y NUNCA funciono, porque
+   `.etapas__caja p+p` es (0,1,2) y le gana con sus 12px. Medido en el jugable:
+   `margin-top` computado 12px, 211 px de hueco bajo la caja 1 y 179 bajo la 3.
+   Se empata la especificidad con `p.etapas__dato`. Es la piedra del S3 otra
+   vez, y se vio contando pixeles, no leyendo la hoja. */
+.etapas{padding:clamp(54px,6vw,86px) clamp(22px,5vw,84px) clamp(60px,6.6vw,96px)}
+
+/*  EL TIRADOR 
+   Una placa grabada con la aleacion del S4 -canto, luz dentro arriba, sombra
+   dentro abajo, filete interior y los cuatro esquineros- pero en BRONCE y no
+   en oro macizo: el oro macizo es `button.boton`, o sea "Jugar" y "Descargar",
+   y una tercera placa de oro competiria con las dos acciones de la pagina. */
+/* EL QUE SE ESTRECHA ES EL TIRADOR, no el <details>. Al reves -que fue el
+   primer intento- el cuerpo hereda los 700 px del padre y la rejilla de tres
+   cajas se queda en DOS columnas con "Extremo" descolgado en otra fila.
+   Medido: cuerpo 700 px y `grid-template-columns: 339px 339px`. Y los margenes
+   negativos con `min(700px,100%)` no lo salvan: dentro del cuerpo ese `100%`
+   ya vale 700, asi que el calculo da cero y no mueve nada. */
+.orient{position:relative;z-index:2;margin:0 auto}
+.orient__tirador{list-style:none;cursor:pointer;position:relative;display:block;
+  max-width:700px;margin:0 auto;
+  padding:clamp(20px,2.2vw,28px) clamp(46px,5vw,64px) clamp(34px,3.4vw,42px);
+  text-align:center;border-radius:13px;border:1px solid rgba(227,197,116,.26);
+  background:radial-gradient(120% 90% at 20% 0%,rgba(255,232,178,.1),transparent 64%),
+             linear-gradient(180deg,rgba(227,197,116,.085),rgba(227,197,116,.02) 62%,
+                             rgba(227,197,116,.055));
+  box-shadow:inset 0 1px 0 rgba(255,246,220,.13),
+             inset 0 -2px 4px rgba(0,0,0,.4),
+             0 4px 0 -1px rgba(0,0,0,.6),
+             0 20px 34px -22px rgba(0,0,0,.94);
+  transition:border-color .3s,box-shadow .3s,transform .16s,background .3s}
+.orient__tirador::-webkit-details-marker{display:none}
+.orient__tirador::marker{content:''}
+/* el filete grabado: SON DOS lineas, la sombra del corte y la luz del labio */
+.orient__tirador::before{content:'';position:absolute;inset:5px;border-radius:9px;
+  pointer-events:none;border:1px solid rgba(227,197,116,.13);
+  box-shadow:inset 0 1px 0 rgba(0,0,0,.4)}
+.orient__tirador:hover{border-color:rgba(227,197,116,.5);
+  box-shadow:inset 0 1px 0 rgba(255,246,220,.16),
+             inset 0 -2px 4px rgba(0,0,0,.4),
+             0 4px 0 -1px rgba(0,0,0,.6),
+             0 20px 34px -22px rgba(0,0,0,.94),
+             0 0 34px -10px rgba(255,203,102,.42)}
+.orient__tirador:active{transform:translateY(2px);
+  box-shadow:inset 0 1px 0 rgba(255,246,220,.13),
+             inset 0 -2px 4px rgba(0,0,0,.4),
+             0 2px 0 -1px rgba(0,0,0,.6),
+             0 12px 22px -18px rgba(0,0,0,.94)}
+.orient__tirador:focus-visible{outline:2px solid var(--oro-luz);outline-offset:4px}
+/* los cuatro esquineros, como en el boton y en las fichas de papel */
+.orient__esq{position:absolute;width:9px;height:9px;pointer-events:none;
+  border:1px solid rgba(227,197,116,.44)}
+.orient__esq:nth-of-type(1){top:9px;left:9px;border-right:0;border-bottom:0}
+.orient__esq:nth-of-type(2){top:9px;right:9px;border-left:0;border-bottom:0}
+.orient__esq:nth-of-type(3){bottom:9px;left:9px;border-right:0;border-top:0}
+.orient__esq:nth-of-type(4){bottom:9px;right:9px;border-left:0;border-top:0}
+.orient__rot{display:block;font:600 clamp(10.5px,.86vw,11.5px)/1.6 var(--lapida);
+  color:rgba(227,197,116,.72);letter-spacing:.24em;text-indent:.24em;
+  text-transform:uppercase}
+/* EL TITULO NO ES FLEX, y eso importa: el marcador de tildes envuelve cada
+   vocal acentuada en un <t>, y dentro de un flex con `gap` ese <t> se vuelve
+   ITEM y parte la palabra ("pedag o gicas"). Ya paso dos veces (S3). */
+.orient__tit{display:block;margin:5px 0 6px;
+  font:600 clamp(25px,2.5vw,35px)/1.16 var(--display);color:var(--oro-luz);
+  letter-spacing:-.004em;text-shadow:0 2px 0 rgba(20,13,4,.66)}
+.orient__pista{display:block;font-size:clamp(13.5px,1.02vw,15px);line-height:1.6;
+  color:rgba(237,234,226,.66)}
+/* EL CHEVRON VA ABAJO Y CENTRADO, no a la derecha: puesto al costado obligaba
+   a reservarle ancho y dejaba la placa ASIMETRICA - medido, el filete
+   izquierdo caia a 23 px del borde y el derecho a 60, o sea 37 de desvio, y
+   se veia. Abajo y al centro la placa queda simetrica y el gesto se lee
+   igual de bien. */
+/* LA PILDORA, para que se vea que esto se despliega. El chevron solo no
+   bastaba: hay que decirlo con una PALABRA. Cambia sola con `[open]` y sin JS
+   -son dos <span> y una regla de display-, igual que hace el <details> nativo
+   con todo lo demas. */
+.orient__accion{position:absolute;left:50%;bottom:clamp(11px,1.2vw,15px);
+  transform:translateX(-50%);display:inline-flex;align-items:center;gap:8px;
+  padding:6px 15px 7px;border-radius:999px;white-space:nowrap;
+  border:1px solid rgba(227,197,116,.34);background:rgba(12,9,6,.55);
+  font:600 clamp(10.5px,.86vw,11.5px)/1 var(--lapida);color:var(--oro-claro);
+  letter-spacing:.18em;text-indent:.18em;text-transform:uppercase;
+  transition:border-color .3s,color .3s,background .3s}
+.orient__tirador:hover .orient__accion{border-color:rgba(227,197,116,.6);
+  color:var(--oro-luz);background:rgba(20,15,8,.7)}
+.orient__verbo--cerrar{display:none}
+.orient[open] .orient__verbo--abrir{display:none}
+.orient[open] .orient__verbo--cerrar{display:inline}
+.orient__abre{display:flex;align-items:center;justify-content:center;
+  width:13px;height:9px;color:inherit;
+  transition:transform .34s cubic-bezier(.2,.85,.3,1)}
+.orient__abre svg{width:15px;height:9px;fill:none;stroke:currentColor;
+  stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.orient[open] .orient__abre{transform:rotate(180deg)}
+/* los dos filetes y el rombo, el mismo remate que separa las secciones */
+.orient__fle{position:absolute;top:50%;width:clamp(14px,2.4vw,30px);height:1px;
+  margin-top:-1px;pointer-events:none}
+.orient__fle--izq{left:clamp(14px,1.7vw,22px);
+  background:linear-gradient(90deg,transparent,rgba(227,197,116,.42))}
+.orient__fle--der{right:clamp(14px,1.7vw,22px);
+  background:linear-gradient(90deg,rgba(227,197,116,.42),transparent)}
+/* el cuerpo va al ancho de la seccion: las tres cajas piden sitio */
+.orient__cuerpo{padding-top:clamp(30px,3.4vw,46px)}
+/* EL SUBAPARTADO, con mayuscula inicial y con peso. Era un `.rotulo` de 12 px
+   en versalitas y se leia como un pie; ahora va en la serif de display, en oro
+   y con su filete encima, que es lo que lo hace un APARTADO y no una etiqueta.
+   SIN `text-transform`, o la mayuscula inicial no se veria. */
+/* VA CON `.centrado > p.` DELANTE, y no con `.etapas__paso` a secas: el paso
+   es un <p> hijo directo de `.centrado`, y `.centrado > p` es (0,1,1) - le
+   gana a (0,1,0) y le imponia su `clamp(17px,1.32vw,19px)`. Medido antes de
+   verlo: la regla decia minimo 19 px y el computado daba 17, o sea que el
+   subapartado NUNCA tuvo el tamano que se le puso, ni en escritorio. Es la
+   piedra del S3, y en esta ronda ya es la quinta vez. */
+.centrado > p.etapas__paso{position:relative;display:inline-block;
+  margin:0 auto clamp(7px,.8vw,11px);padding-top:clamp(15px,1.6vw,21px);
+  font:600 clamp(19px,1.62vw,24px)/1.25 var(--display);color:var(--oro-luz);
+  letter-spacing:.005em;text-shadow:0 2px 0 rgba(20,13,4,.6)}
+.centrado > p.etapas__paso::before{content:'';position:absolute;top:0;left:50%;
+  transform:translateX(-50%);width:74px;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(227,197,116,.5),transparent)}
+
+/* TRES COLUMNAS, DOS O UNA, y EXPLICITAS: con `auto-fit` el CSS no sabe
+   cuantas columnas hay, y hace falta saberlo para lo de abajo. Los cortes
+   salen de medir donde una caja baja de ~270 px, que es cuando su texto de
+   15 px deja de repartirse bien. */
+.etapas__rejilla{display:grid;--gap:clamp(14px,1.7vw,24px);gap:var(--gap);
+  position:relative;z-index:2;grid-template-columns:repeat(3,minmax(0,1fr));
   margin-top:clamp(28px,3.2vw,44px)}
-.etapas__caja{padding:clamp(20px,1.9vw,28px) clamp(20px,1.9vw,28px) clamp(18px,1.7vw,24px);
+@media (max-width:940px){
+  .etapas__rejilla{grid-template-columns:repeat(2,minmax(0,1fr))}
+  /* SI LA TERCERA VA SOLA, AL MEDIO. Colgada a la izquierda, con el hueco a la
+     derecha, se lee como que falta una caja. */
+  .etapas__rejilla > :last-child:nth-child(3){grid-column:1 / -1;
+    width:calc(50% - var(--gap) / 2);justify-self:center}
+}
+@media (max-width:680px){
+  .etapas__rejilla{grid-template-columns:minmax(0,1fr)}
+  .etapas__rejilla > :last-child:nth-child(3){grid-column:auto;width:auto}
+}
+.etapas__caja{padding:clamp(22px,2vw,30px) clamp(20px,1.9vw,28px) clamp(18px,1.7vw,24px);
   border-radius:14px;border:1px solid rgba(227,197,116,.2);
-  background:linear-gradient(180deg,rgba(227,197,116,.07),rgba(227,197,116,.016));
-  box-shadow:inset 0 1px 0 rgba(255,246,220,.07),0 10px 26px -18px rgba(0,0,0,.8);
+  background:radial-gradient(122% 78% at 18% 0%,rgba(255,232,178,.085),transparent 62%),
+             linear-gradient(180deg,rgba(227,197,116,.07),rgba(227,197,116,.016));
+  box-shadow:inset 0 1px 0 rgba(255,246,220,.11),
+             inset 0 -1px 0 rgba(0,0,0,.5),
+             0 3px 0 -1px rgba(0,0,0,.55),
+             0 18px 32px -22px rgba(0,0,0,.92);
   display:flex;flex-direction:column}
+/* LOS ROMANOS DEL FRISO. Cinco de 38 px piden 222 de los 316 de ancho util,
+   asi que caben sin encogerlos - y encogerlos obligaria a reescribir sus seis
+   sombras, o sea a tener dos recetas del mismo medallon. */
+.etapas__romanos{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 15px}
+/* el nombre del tramo, para quien no ve los medallones */
+.solotexto{position:absolute;width:1px;height:1px;margin:-1px;padding:0;
+  overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;border:0}
 .etapas__caja h3{font:600 clamp(21px,1.72vw,26px)/1.22 var(--display);
-  color:var(--oro-luz);margin:7px 0 12px;letter-spacing:-.005em;
+  color:var(--oro-luz);margin:0 0 12px;letter-spacing:-.005em;
   text-shadow:0 2px 0 rgba(20,13,4,.6)}
 .etapas__caja p{font-size:clamp(15px,1.14vw,17px);line-height:1.68;
   color:rgba(237,234,226,.82)}
@@ -1174,22 +1330,90 @@ a.boton2{background-size:auto;box-shadow:0 0 0 1px rgba(227,197,116,.42),
 /* la lista de reglas del primer tramo: los puntos separan, no adornan */
 .etapas__lista{color:rgba(240,236,226,.9)}
 /* el dato de etapa cierra la caja y se pega abajo, asi las tres cuadran
-   aunque su texto mida distinto */
-.etapas__dato{margin-top:auto;padding-top:15px;
+   aunque su texto mida distinto. VA CON `p.` DELANTE: ver la cabecera. */
+.etapas__caja p.etapas__dato{margin-top:auto;padding-top:15px;
   border-top:1px solid rgba(227,197,116,.17)}
 .etapas__dato .rotulo{font-size:clamp(11px,.92vw,12.5px);letter-spacing:.2em;
   text-indent:.2em;line-height:1.55}
-.etapas__modo .rotulo{margin-bottom:2px}
+
+/*  LOS TRES MODOS, CADA UNO CON SU COLOR 
+   Son otra cosa que los tramos y se leian igual: seis cajas identicas en la
+   misma seccion. Y entre ellos hay una escalera -calma, aviso, peligro- que
+   ahora se ve sin leer.
+
+   NINGUNO ES INVENTADO. El amatista es el del cartel de dificultad del juego
+   (S30), el naranja el del Mecha Antitilde (#F77818 / #FF9900, medido de su
+   propia textura, S5 sexies) y el rojo el del Raton Samurai (#E23A3A, S4).
+   El amatista no choca con el violeta #6E3FA6 del S4 -es el mismo tono mucho
+   mas claro y menos saturado- y ninguno de los tres es el oro, que son las
+   tildes.
+
+   VAN POR VARIABLES y no repitiendo el bloque tres veces: la receta del
+   volumen es UNA y lo unico que cambia de caja a caja es el tono. */
+.etapas__modo{border-color:var(--filo);
+  background:radial-gradient(122% 78% at 18% 0%,var(--luz),transparent 62%),
+             linear-gradient(180deg,var(--cuerpo),var(--fondo));
+  box-shadow:inset 0 1px 0 var(--brillo),
+             inset 0 -1px 0 rgba(0,0,0,.5),
+             0 3px 0 -1px rgba(0,0,0,.55),
+             0 18px 32px -22px rgba(0,0,0,.92),
+             0 0 22px -12px var(--halo)}
 .etapas__modo strong{display:block;font:600 clamp(20px,1.6vw,24px)/1.2 var(--display);
-  color:var(--oro-luz);margin:4px 0 4px;text-shadow:0 2px 0 rgba(20,13,4,.6)}
+  color:var(--tit);margin:0 0 3px;text-shadow:0 2px 0 rgba(14,8,16,.7)}
 .etapas__modo .etapas__cifra{display:block;margin-bottom:12px;
-  font-size:clamp(14px,1.06vw,15.5px);color:var(--oro-claro);opacity:.94}
+  font-size:clamp(14px,1.06vw,15.5px);color:var(--cifra)}
+.etapas__modo p.etapas__dato{border-top-color:var(--filo)}
+/* MEDIDO, no elegido: los rotulos de etapa a .8 de alfa daban 4,12 de
+   contraste -por debajo del 4,5 minimo- contra los 6,61 del mismo rotulo en
+   las cajas de tramo. Son el unico texto que se quedaba corto al tenirlas. */
+.etapas__modo .etapas__dato .rotulo{color:var(--rot)}
+.m-tranquilo{--filo:rgba(198,158,240,.3);  --luz:rgba(222,198,255,.085);
+  --cuerpo:rgba(169,113,224,.1); --fondo:rgba(142,88,196,.022);
+  --brillo:rgba(236,222,255,.12); --halo:rgba(169,113,224,.5);
+  --tit:#DFC9F7; --cifra:rgba(203,166,242,.96); --rot:rgba(222,200,252,.95)}
+.m-desafiante{--filo:rgba(247,150,60,.32); --luz:rgba(255,220,176,.085);
+  --cuerpo:rgba(247,120,24,.1);  --fondo:rgba(180,84,14,.022);
+  --brillo:rgba(255,232,202,.12); --halo:rgba(247,120,24,.5);
+  --tit:#FBC98D; --cifra:rgba(248,175,104,.96); --rot:rgba(252,210,166,.95)}
+.m-extremo{--filo:rgba(226,96,88,.32);     --luz:rgba(255,198,188,.08);
+  --cuerpo:rgba(226,58,58,.1);   --fondo:rgba(150,36,32,.022);
+  --brillo:rgba(255,222,216,.12); --halo:rgba(226,58,58,.5);
+  --tit:#F5AFA4; --cifra:rgba(238,144,132,.96); --rot:rgba(250,198,190,.95)}
+
 .etapas__cierre{position:relative;z-index:2;max-width:44em;margin:clamp(30px,3.4vw,46px) auto 0;
   text-align:center;font-size:clamp(15px,1.14vw,17px);line-height:1.68;
   color:rgba(237,234,226,.78)}
 .etapas__medio{margin-top:clamp(52px,5.6vw,80px)}
+
+/*  EL PARTE DE FALLOS - el tercer item 
+   La captura sale del juego COMPILADO (`_capinforme.py`) y va a 1152x976, o
+   sea 2x los 576 px CSS a los que se ensena: en un portatil retina una imagen
+   a 1x sale pixelada, y eso NO se ve mirando en el panel, que va a dpr 1.
+   El marco es el de `.friso .lam` -anillos concentricos y extrusion dura en
+   dos escalones-, que es la receta para fondo oscuro y ya estaba. */
+.parte{position:relative;z-index:2;margin:clamp(28px,3.2vw,42px) auto 0;
+  max-width:576px;display:flex;flex-direction:column;align-items:center}
+.parte__marco{display:block;width:100%;border-radius:8px;overflow:hidden;
+  box-shadow:0 0 0 1px rgba(227,197,116,.34),0 0 0 4px rgba(10,8,14,.9),
+    0 0 0 5px rgba(227,197,116,.12),
+    0 6px 0 rgba(10,8,14,.85),0 10px 0 rgba(5,4,8,.7),
+    0 30px 46px -18px rgba(0,0,0,.94)}
+/* RESERVA SU HUECO: sin `aspect-ratio` la figura mide 38 px hasta que carga y
+   la pagina pega un salto al abrir el desplegable (ya paso con la tira). */
+.parte img{display:block;width:100%;height:auto;aspect-ratio:1152/976;
+  background:#171310}
+.parte figcaption{margin-top:clamp(16px,1.8vw,22px);text-align:center;
+  font-size:clamp(14px,1.06vw,15.5px);line-height:1.66;
+  color:rgba(237,234,226,.66)}
 @media (max-width:640px){
-  .etapas__caja{padding:20px 20px 18px}
+  .etapas__caja{padding:22px 20px 18px}
+  /* cinco medallones de 38 px piden 222 y en 291 de ancho util siguen
+     cabiendo, pero apretados: se les baja el hueco antes que el tamano */
+  .etapas__romanos{gap:6px}
+  /* en una pantalla estrecha los filetes quedan pegados al texto: fuera. El
+     chevron ya va abajo y centrado en todas las anchuras. */
+  .orient__tirador{padding-left:22px;padding-right:22px}
+  .orient__fle{display:none}
 }
 
 /* en un movil no hay raton: la linterna se queda quieta en el centro y las
@@ -1395,77 +1619,103 @@ a.boton2{background-size:auto;box-shadow:0 0 0 1px rgba(227,197,116,.42),
   <div class="remate remate--alto" aria-hidden="true"><b></b><b></b><b></b></div>
   <div class="dentro">
 
-    <div class="centrado entra">
-      <p class="rotulo">C&#243;mo est&#225; pensado</p>
-      <h2>Qu&#233; mide cada cap&#237;tulo</h2>
-      <p>Los ocho cap&#237;tulos siguen el orden de la Ortograf&#237;a de la RAE: primero las reglas que se aplican mirando la palabra, despu&#233;s los casos en que la palabra no basta, y al final el examen. Se pueden jugar en cualquier orden, pero est&#225;n escritos para leerse as&#237;.</p>
-    </div>
+    <!-- EL `.entra` VA EN EL <details> Y EN NADA DE DENTRO: lo de dentro no es
+         visible mientras esta plegado, asi que el IntersectionObserver no lo
+         veria nunca y quedaria en `opacity:0` al abrir. -->
+    <details class="orient entra">
+      <summary class="orient__tirador">
+        <i class="orient__esq" aria-hidden="true"></i><i class="orient__esq" aria-hidden="true"></i><i class="orient__esq" aria-hidden="true"></i><i class="orient__esq" aria-hidden="true"></i>
+        <span class="orient__fle orient__fle--izq" aria-hidden="true"></span>
+        <span class="orient__fle orient__fle--der" aria-hidden="true"></span>
+        <span class="orient__rot">Para quien lo lleve al aula o precise un plan de aprendizaje</span>
+        <span class="orient__tit">Orientaciones pedag&#243;gicas</span>
+        <span class="orient__pista">Qu&#233; mide cada cap&#237;tulo &#183; los tres modos &#183; el parte de fallos</span>
+        <span class="orient__accion" aria-hidden="true"><span class="orient__verbo orient__verbo--abrir">Desplegar</span><span class="orient__verbo orient__verbo--cerrar">Plegar</span><span class="orient__abre"><svg viewBox="0 0 15 9"><path d="M1.4 1.4L7.5 7.5l6.1-6.1"/></svg></span></span>
+      </summary>
 
-    <div class="etapas__rejilla entra">
+      <div class="orient__cuerpo">
 
-      <div class="etapas__caja">
-        <p class="rotulo">Cap&#237;tulos 1 a 5</p>
-        <h3>La regla</h3>
-        <p class="etapas__lista">Agudas y llanas &#183; esdr&#250;julas y sobresdr&#250;julas &#183; diptongos y triptongos &#183; palabras compuestas y acabadas en -y &#183; <b>hiatos</b>.</p>
-        <p>Todo esto se resuelve <b>con la palabra delante</b>: se cuenta d&#243;nde carga la voz, se mira en qu&#233; letra acaba y se aplica la regla. No hay que saber nada m&#225;s, y es donde se automatiza el gesto: al terminar el quinto, poner la tilde deber&#237;a salir sin pensarlo.</p>
-        <p class="etapas__dato"><span class="rotulo">Primaria y primer ciclo de Secundaria</span></p>
+        <div class="centrado">
+          <p class="etapas__paso">El temario</p>
+          <h2>Qu&#233; mide cada cap&#237;tulo</h2>
+          <p>Los ocho cap&#237;tulos siguen el orden de la Ortograf&#237;a de la RAE: primero las reglas que se aplican mirando la palabra, despu&#233;s los casos en que la palabra no basta, y al final el examen. Se pueden jugar en cualquier orden, pero est&#225;n escritos para leerse as&#237;.</p>
+        </div>
+
+        <div class="etapas__rejilla">
+
+          <div class="etapas__caja">
+            <p class="etapas__romanos"><span class="solotexto">Cap&#237;tulos 1 a 5.</span><span class="romano" aria-hidden="true">I</span><span class="romano" aria-hidden="true">II</span><span class="romano" aria-hidden="true">III</span><span class="romano" aria-hidden="true">IV</span><span class="romano" aria-hidden="true">V</span></p>
+            <h3>La regla</h3>
+            <p class="etapas__lista">Agudas y llanas &#183; esdr&#250;julas y sobresdr&#250;julas &#183; diptongos y triptongos &#183; compuestas y acabadas en -y &#183; <b>hiatos</b>.</p>
+            <p>Todo esto se resuelve <b>con la palabra delante</b>: se cuenta d&#243;nde carga la voz, se mira en qu&#233; letra acaba y se aplica la regla. Es donde se automatiza el gesto: al terminar el quinto, poner la tilde deber&#237;a salir sin pensarlo.</p>
+            <p class="etapas__dato"><span class="rotulo">Primaria y primer ciclo de Secundaria</span></p>
+          </div>
+
+          <div class="etapas__caja">
+            <p class="etapas__romanos"><span class="solotexto">Cap&#237;tulos 6 y 7.</span><span class="romano" aria-hidden="true">VI</span><span class="romano" aria-hidden="true">VII</span></p>
+            <h3>Lo que la regla no dice</h3>
+            <p>Aqu&#237; la palabra deja de bastar. <b>En el sexto</b> hay que saber de d&#243;nde viene: <em>esc&#225;ner</em> lleva tilde porque el espa&#241;ol la adopt&#243;, y <em>marketing</em> no la lleva porque sigue siendo de fuera. Las dos son llanas acabadas en consonante: la regla dir&#237;a lo mismo de las dos. Eso no se deduce, se conoce.</p>
+            <p><b>En el s&#233;ptimo</b>, qu&#233; hace la palabra en la frase: <em>tu</em> y <em>t&#250;</em> se escriben con las mismas letras, y lo que las separa es que una es posesivo y la otra pronombre.</p>
+            <p>Quien llega bien al quinto y se atasca en el sexto no ha empeorado: le est&#225;n pidiendo otra cosa.</p>
+            <p class="etapas__dato"><span class="rotulo">Segundo ciclo de Secundaria y Bachillerato</span></p>
+          </div>
+
+          <div class="etapas__caja">
+            <p class="etapas__romanos"><span class="solotexto">Cap&#237;tulo 8.</span><span class="romano" aria-hidden="true">VIII</span></p>
+            <h3>El examen</h3>
+            <p>Diez convocatorias reales de las pruebas de acceso a la universidad para <b>mayores de 25 a&#241;os de Catalu&#241;a</b>, con sus palabras y sus enunciados tal como salieron. Se repiten palabras entre convocatorias porque <b>en el examen se repiten</b>, y el juego lo avisa cuando pasa.</p>
+            <p>Y trae un gesto que no aparece antes: separar en s&#237;labas. No es un adorno &#8212; es lo que decide d&#243;nde cae la tilde, y lo que distingue <em>o-&#237;r</em> de <em>huir</em>.</p>
+            <p class="etapas__dato"><span class="rotulo">Pruebas de acceso</span></p>
+          </div>
+
+        </div>
+
+        <div class="centrado etapas__medio">
+          <p class="etapas__paso">La dificultad</p>
+          <h2>Los tres modos de dificultad</h2>
+          <p>Se eligen en la portada de cada cap&#237;tulo y cambian dos cosas: cu&#225;ntos corazones se tienen y cu&#225;nto tiempo hay para contestar. No cambian ni las palabras, ni las reglas, ni los jefes.</p>
+        </div>
+
+        <div class="etapas__rejilla">
+
+          <div class="etapas__caja etapas__modo m-tranquilo">
+            <strong>Tranquilo</strong>
+            <span class="etapas__cifra">5 corazones &#183; el doble de tiempo</span>
+            <p>Para quien llega nuevo a un cap&#237;tulo. Es el que sale por defecto.</p>
+            <p class="etapas__dato"><span class="rotulo">Primaria y primer ciclo de Secundaria</span></p>
+          </div>
+
+          <div class="etapas__caja etapas__modo m-desafiante">
+            <strong>Desafiante</strong>
+            <span class="etapas__cifra">5 corazones &#183; un 50&nbsp;% m&#225;s de tiempo</span>
+            <p>Cuando la regla ya sale sin pararse a pensarla.</p>
+            <p class="etapas__dato"><span class="rotulo">Segundo ciclo de Secundaria, Bachillerato y ciclos formativos</span></p>
+          </div>
+
+          <div class="etapas__caja etapas__modo m-extremo">
+            <strong>Extremo</strong>
+            <span class="etapas__cifra">4 corazones &#183; el tiempo justo</span>
+            <p>El juego como se concibi&#243;, y el reloj apretado es la condici&#243;n del examen de verdad.</p>
+            <p class="etapas__dato"><span class="rotulo">Pruebas de acceso</span></p>
+          </div>
+
+        </div>
+
+        <p class="etapas__cierre">Los tres modos siguen el mismo tramo que los cap&#237;tulos, pero <b>la etapa es s&#243;lo un punto de partida: el modo se elige por soltura, no por edad.</b> Un alumno de acceso que est&#225; pele&#225;ndose con los hiatos aprende m&#225;s en Tranquilo que fallando por tiempo en Extremo.</p>
+
+        <div class="centrado etapas__medio">
+          <p class="etapas__paso">Lo que te llevas</p>
+          <h2>El parte de fallos</h2>
+          <p>Al terminar cada cap&#237;tulo se descarga la lista de fallos: la palabra, c&#243;mo se escribi&#243;, qu&#233; tipo de fallo fue y si acab&#243; acert&#225;ndola m&#225;s adelante. Es un archivo de hoja de c&#225;lculo, as&#237; que treinta partes se juntan en una tabla.</p>
+        </div>
+
+        <figure class="parte">
+          <span class="parte__marco"><img src="img/14.webp" width="1152" height="976" loading="lazy" alt="Pantalla final del cap&#237;tulo 1: la lista de fallos con la palabra, su regla y el tipo de fallo &#8212; falta la tilde, tilde de m&#225;s, vocal equivocada, sin responder &#8212; y el bot&#243;n de descargarla."></span>
+          <figcaption>Los cuatro tipos de fallo se cuentan por separado, y no miden lo mismo: quien pone tildes de m&#225;s ha entendido la regla y se le va la mano; quien las omite, todav&#237;a no la aplica.</figcaption>
+        </figure>
+
       </div>
-
-      <div class="etapas__caja">
-        <p class="rotulo">Cap&#237;tulos 6 y 7</p>
-        <h3>Lo que la regla no dice</h3>
-        <p>Aqu&#237; la palabra deja de bastar. <b>En el sexto</b> hay que saber de d&#243;nde viene: <em>esc&#225;ner</em> lleva tilde porque el espa&#241;ol la adopt&#243; y le aplica sus reglas, y <em>marketing</em> no la lleva porque sigue siendo una palabra de fuera. Las dos son llanas acabadas en consonante &#8212; la regla dir&#237;a lo mismo de las dos. Eso no se deduce, se conoce.</p>
-        <p><b>En el s&#233;ptimo</b> hay que saber qu&#233; hace la palabra en la frase: <em>tu</em> y <em>t&#250;</em> se escriben con las mismas letras, y lo que las separa no es la ortograf&#237;a, es que una es posesivo y la otra pronombre. Por eso el juego no pide poner la tilde: pide <b>automatizar qu&#233; funci&#243;n hace</b>.</p>
-        <p>Si alguien llega bien hasta el quinto nivel y se atasca en el sexto, no ha empeorado: le est&#225;n pidiendo otra cosa.</p>
-        <p class="etapas__dato"><span class="rotulo">Segundo ciclo de Secundaria y Bachillerato</span></p>
-      </div>
-
-      <div class="etapas__caja">
-        <p class="rotulo">Cap&#237;tulo 8</p>
-        <h3>El examen</h3>
-        <p>Diez convocatorias reales de las pruebas de acceso a la universidad para <b>mayores de 25 a&#241;os de Catalu&#241;a</b>, con sus palabras y sus enunciados tal como salieron. Se repiten palabras entre convocatorias porque <b>en el examen se repiten</b>, y el juego lo avisa cuando pasa.</p>
-        <p>Y trae un gesto que no aparece antes: separar en s&#237;labas. No es un adorno &#8212; es lo que decide d&#243;nde cae la tilde, y es lo que distingue <em>o-&#237;r</em> de <em>huir</em>.</p>
-        <p class="etapas__dato"><span class="rotulo">Pruebas de acceso</span></p>
-      </div>
-
-    </div>
-
-    <div class="centrado entra etapas__medio">
-      <p class="rotulo">Tranquilo &#183; Desafiante &#183; Extremo</p>
-      <h2>Los tres modos</h2>
-      <p>Se eligen en la portada de cada cap&#237;tulo y cambian dos cosas: cu&#225;ntos corazones se tienen y cu&#225;nto tiempo hay para contestar. No cambian ni las palabras, ni las reglas, ni los jefes.</p>
-    </div>
-
-    <div class="etapas__rejilla entra">
-
-      <div class="etapas__caja etapas__modo">
-        <strong>Tranquilo</strong>
-        <span class="etapas__cifra">5 corazones &#183; el doble de tiempo</span>
-        <p>Para quien llega nuevo a un cap&#237;tulo. Es el que sale por defecto.</p>
-        <p class="etapas__dato"><span class="rotulo">Primaria y primer ciclo de Secundaria</span></p>
-      </div>
-
-      <div class="etapas__caja etapas__modo">
-        <strong>Desafiante</strong>
-        <span class="etapas__cifra">5 corazones &#183; un 50&nbsp;% m&#225;s de tiempo</span>
-        <p>Cuando la regla ya sale sin pararse a pensarla.</p>
-        <p class="etapas__dato"><span class="rotulo">Segundo ciclo de Secundaria y Bachillerato</span></p>
-      </div>
-
-      <div class="etapas__caja etapas__modo">
-        <strong>Extremo</strong>
-        <span class="etapas__cifra">4 corazones &#183; el tiempo justo</span>
-        <p>El juego como se concibi&#243;, y el reloj apretado es la condici&#243;n del examen de verdad.</p>
-        <p class="etapas__dato"><span class="rotulo">Ciclos formativos y pruebas de acceso</span></p>
-      </div>
-
-    </div>
-
-    <p class="etapas__cierre entra">Los tres modos siguen el mismo tramo que los cap&#237;tulos, pero <b>la etapa es s&#243;lo un punto de partida: el modo se elige por soltura, no por edad.</b> Un alumno de acceso que est&#225; pele&#225;ndose con los hiatos aprende m&#225;s en Tranquilo que fallando por tiempo en Extremo.</p>
-
-    <p class="etapas__cierre entra"><b>Y por eso el modo dice algo.</b> Con el tiempo doblado, quien no termina un cap&#237;tulo es porque le falta la regla, no la velocidad: son dos problemas distintos y se arreglan de forma distinta. Con el reloj apretado los dos fallan igual y no hay manera de saber cu&#225;l es cu&#225;l.</p>
-
-    <p class="etapas__cierre entra">Al terminar cada cap&#237;tulo <b>se descarga la lista de fallos</b>: la palabra, c&#243;mo se escribi&#243;, qu&#233; tipo de fallo fue &#8212; tilde que falta, tilde de m&#225;s, tilde en la vocal equivocada, tiempo agotado &#8212; y si acab&#243; acert&#225;ndola m&#225;s adelante.</p>
+    </details>
 
   </div>
 </section>
@@ -1544,7 +1794,9 @@ a.boton2{background-size:auto;box-shadow:0 0 0 1px rgba(227,197,116,.42),
   var conTilde = document.querySelectorAll(
     '.titulo, .entradilla, .rotulo, .centrado h2, .friso__cab h2, ' +
     '.reparto__texto h2, .gesto__texto h2, .leccion, .nota p, ' +
-    '.etapas__caja h3, .etapas__modo strong, ' +
+    '.etapas__caja h3, .etapas__modo strong, .orient__tit, ' +
+    '.etapas__paso, .orient__pista, .etapas__caja p, .etapas__cifra, ' +
+    '.etapas__cierre, .parte figcaption, ' +
     '.friso .titulillo, .chapa em, .centrado > p, .friso__cab > p, ' +
     '.gesto__texto > p, ' +
     '.reparto__texto > p, .pieficha');
